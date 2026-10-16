@@ -92,28 +92,39 @@ export class DatabaseAPI extends BaseAPI {
    * 列出数据库
    */
   async list(type: string): Promise<any> {
-    return this.post(`/api/v2/databases/${type}/search`, { page: 1, pageSize: 100 });
+    // 兼容 1Panel v2.3+ 新版接口规范：统一路径为 /api/v2/databases/search，且入参必须携带 database/type/orderBy/order
+    const dbType = type.toLowerCase();
+    return this.post("/api/v2/databases/search", {
+      page: 1,
+      pageSize: 100,
+      database: dbType,
+      type: dbType,
+      orderBy: "name",
+      order: "null"
+    });
   }
 
   /**
    * 创建数据库
    */
   async create(type: string, db: any): Promise<any> {
-    return this.post(`/api/v2/databases/${type}`, db);
+    const dbType = type.toLowerCase();
+    const payload = { ...db, type: db.type || dbType };
+    return this.post("/api/v2/databases", payload);
   }
 
   /**
    * 删除数据库
    */
   async remove(type: string, id: number): Promise<any> {
-    return this.post(`/api/v2/databases/${type}/del`, { id });
+    return this.post("/api/v2/databases/del", { id });
   }
 
   /**
    * 获取数据库详情
    */
   async getDetail(type: string, id: number): Promise<any> {
-    return this.request(`/api/v2/databases/${type}/${id}`, { method: "GET" });
+    return this.request(`/api/v2/databases/${id}`, { method: "GET" });
   }
 
   // ==================== MySQL ====================
@@ -143,7 +154,7 @@ export class DatabaseAPI extends BaseAPI {
    * MySQL - 获取数据库信息
    */
   async mysqlGetInfo(from: "local" | "remote" = "local"): Promise<any> {
-    return this.post("/api/v2/databases/common/info", { from });
+    return this.post("/api/v2/databases/common/info", { from, type: "mysql" });
   }
 
   /**
