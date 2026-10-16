@@ -23,34 +23,34 @@ export class DiskAPI extends BaseAPI {
    * 获取磁盘信息
    */
   async list(): Promise<any> {
-    return this.request("/api/v2/host/disks", { method: "GET" });
+    return this.request("/api/v2/hosts/disks", { method: "GET" });
   }
 
   /**
    * 获取完整磁盘信息
    */
   async getFullInfo(): Promise<any> {
-    return this.request("/api/v2/host/disks/info", { method: "GET" });
+    return this.request("/api/v2/hosts/disks", { method: "GET" });
   }
 
   /**
    * 挂载磁盘
    */
   async mount(params: DiskMountRequest): Promise<any> {
-    return this.post("/api/v2/host/disks/mount", params);
+    return this.post("/api/v2/hosts/disks/mount", params);
   }
 
   /**
    * 分区磁盘
    */
   async partition(params: DiskPartitionRequest): Promise<any> {
-    return this.post("/api/v2/host/disks/partition", params);
+    return this.post("/api/v2/hosts/disks/partition", params);
   }
 
   /**
    * 卸载磁盘
    */
   async unmount(mountPoint: string): Promise<any> {
-    return this.post("/api/v2/host/disks/umount", { path: mountPoint });
+    return this.post("/api/v2/hosts/disks/umount", { path: mountPoint });
   }
 }
